@@ -1,7 +1,7 @@
 const Sign = () => (
-  <div className="Sign">
+  <div className="Container">
     <form className="Form">
-      <p>Please, enter credentials</p>
+      <h3>Authorization form</h3>
       <input type="email" placeholder="Email"/>
       <input type="password" placeholder="Password"/>
       <button type="submit">Sign in</button>
