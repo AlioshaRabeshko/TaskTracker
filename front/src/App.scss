@@ -1,9 +1,87 @@
-.App {
+.Footer {
+  display: flex;
+  justify-content: flex-end;
+  position: absolute; 
+  left: 0; 
+  right: 0; 
+  bottom: 0; 
+  padding: 30px;
+  background-color: rgb(166, 204, 255);
+}
+
+.Container {
   text-align: center;
 }
 
-.container {
-  width: 80%;
-  margin: auto;
-  background-color: #e4e4e4;
+.NavBar {
+  padding: 20px 50px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  background-color: rgb(166, 204, 255);
+  border-bottom: thick groove rgb(104, 170, 255);
+}
+
+.Link {
+  font-size: 15px;
+  padding: 10px 15px;
+  background-color: rgb(104, 170, 255);
+  border: 3px solid transparent;
+  border-radius: 5px;
+  color: rgb(5, 0, 32);
+  &:hover {
+    background-color: #44dba9;
+    border: 3px inset black;
+  }
+}
+
+.Form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.Form input, button{
+  margin: 10px 0px;
+}
+
+.Form button{
+  background-color: rgb(104, 170, 255);
+  color: rgb(5, 0, 32);
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+table {
+  width: 90%;
+  margin: 0px 70px;
+  border-collapse: collapse;
+}
+
+th, td {
+  text-align: left;
+  padding: 10px;
+}
+
+table, th, td {
+  border: 1px solid black;
+}
+
+thead tr {
+  background-color: rgb(166, 204, 255);
+}
+
+tbody tr {
+  &:hover{
+    background-color: #44dba9;
+  }
+}
+
+.Label {
+  padding: 8px;
+}
+
+.SelectAction {
+  margin: 10px;
 }
