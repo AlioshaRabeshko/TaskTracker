@@ -1,10 +1,10 @@
 .Footer {
   display: flex;
   justify-content: flex-end;
-  position: absolute; 
-  left: 0; 
-  right: 0; 
-  bottom: 0; 
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
   padding: 30px;
   background-color: rgb(166, 204, 255);
 }
@@ -27,10 +27,9 @@
   padding: 10px 15px;
   background-color: rgb(104, 170, 255);
   border: 3px solid transparent;
-  border-radius: 5px;
   color: rgb(5, 0, 32);
   &:hover {
-    background-color: #44dba9;
+    background-color: rgb(84, 150, 235);
     border: 3px inset black;
   }
 }
@@ -41,41 +40,19 @@
   align-items: center;
 }
 
-.Form input, button{
+.Form input,
+button {
+  width: 20%;
   margin: 10px 0px;
+  font-size: medium;
 }
 
-.Form button{
+.Form button {
   background-color: rgb(104, 170, 255);
   color: rgb(5, 0, 32);
   border: none;
   padding: 5px 10px;
   border-radius: 5px;
-}
-
-table {
-  width: 90%;
-  margin: 0px 70px;
-  border-collapse: collapse;
-}
-
-th, td {
-  text-align: left;
-  padding: 10px;
-}
-
-table, th, td {
-  border: 1px solid black;
-}
-
-thead tr {
-  background-color: rgb(166, 204, 255);
-}
-
-tbody tr {
-  &:hover{
-    background-color: #44dba9;
-  }
 }
 
 .Label {
@@ -84,4 +61,22 @@ tbody tr {
 
 .SelectAction {
   margin: 10px;
+}
+
+.list {
+  list-style-type: none;
+  width: 60%;
+  margin: auto;
+  li {
+    margin-top: 3px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    box-shadow: 0 0 3px #2c2e36;
+    p,
+    h3 {
+      flex: 1;
+      padding: 0 10px;
+    }
+  }
 }
