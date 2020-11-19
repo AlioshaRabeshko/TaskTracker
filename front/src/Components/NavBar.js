@@ -1,14 +1,22 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+import { Fragment } from 'react'
 
 const NavBar = () => {
-  //const isSigned = true;
+  const auth = true;
   return (
     <div className="NavBar">
-      {/*<Link className="Link" to={'/'}>Home</Link>*/}
-      <Link className="Link" to={'/task-list'}>Task List</Link>
-      <Link className="Link" to={'/task-edit'}>Task Edit</Link>      
-      <Link className="Link" to={'/user-panel'}>Account</Link>
-      <Link className="Link" to={'/sign'}>Sign In</Link>
+      <NavLink className="logo link" activeClassName="active" to="/" exact>
+        AGLTasks
+      </NavLink>
+      <div className="links">
+        {auth?
+          <Fragment>
+            <NavLink className="link" activeClassName="active" to="/task-list">Task List</NavLink>
+            <NavLink className="link" activeClassName="active" to="/add-task">Add Task</NavLink>
+            <NavLink className="link" activeClassName="active" to="/user-panel">Account</NavLink>
+          </Fragment>:
+          <NavLink className="link" activeClassName="active" to="/sign" exact>Auth</NavLink>}
+      </div>
     </div>
   );
 }

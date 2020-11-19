@@ -15,29 +15,38 @@
   margin: 20px 10%;
   background-color: #fff;
   padding: 20px;
-  box-shadow: 0 0 3px #2c2e36;
+  box-shadow: 0 0 5px #2c2e36;
 }
 
 .NavBar {
-  padding: 20px 50px;
-  margin-bottom: 20px;
+  background-color: #fff;
+  width: 85%;
+  margin: auto;
   display: flex;
   justify-content: space-between;
-  background-color: rgb(166, 204, 255);
-  box-shadow: 0 0 10px rgb(24, 100, 195);
-}
-
-.Link {
-  font-size: 15px;
-  padding: 10px 15px;
-  background-color: rgb(104, 170, 255);
-  border: 3px solid transparent;
-  color: rgb(5, 0, 32);
-  &:hover {
-    background-color: rgb(84, 150, 235);
-
-    box-shadow: 0 0 10px #fff;
-    // border: 3px inset black;
+  box-shadow: 0 0 5px #2c2e36;
+  .logo {
+    flex: 5 1;
+    font-size: 24px;
+    justify-items: start;
+    padding: 10px 20px;
+    text-align: left;
+    color: #2c2e36;;
+  }
+  .links {
+    display: flex;
+    padding: 15px;
+    .link {
+      padding: 0 10px;
+      font-size: medium;
+      color: #2c2e36;;
+      &:hover {
+        color: #c50e0e;
+      }
+    }
+  }
+  .active {
+    color: #c50e0e !important;
   }
 }
 
@@ -49,21 +58,22 @@
     padding: 5px 0;
     font-size: medium;
   }
-}
-
-.Form input,
-button {
-  width: 20%;
-  margin: 10px 0px;
-  font-size: medium;
-}
-
-.Form button {
-  background-color: rgb(124, 150, 205);
-  color: rgb(5, 0, 32);
-  border: none;
-  padding: 10px;
-  // border-radius: 5px;
+  input, button {
+    width: 20%;
+    margin: 10px 0px;
+    font-size: medium;
+    outline: none;
+  }
+  button {
+    padding: 10px;
+    margin-top: 10px;
+    border: none;
+    color: #000;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    background-color: #e7e7e7;
+  }
 }
 
 .Label {
