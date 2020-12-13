@@ -8,7 +8,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
 		<Route
 			{...rest}
 			render={(props) =>
-				authToken ? <Component {...props} /> : <Redirect to="/sign" />
+				authToken ? <Component {...props} /> : <Redirect to='/sign' />
 			}
 		/>
 	);

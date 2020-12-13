@@ -10,7 +10,7 @@ const TaskList = () => {
 		},
 		{
 			name: 'Do work',
-			desc: 'Make .psd maket',
+			desc: 'Finish frontend',
 			deadline: new Date(),
 			prior: 10,
 			time: '4 hours',
@@ -18,7 +18,7 @@ const TaskList = () => {
 		},
 		{
 			name: 'Do work',
-			desc: 'Make .psd maket',
+			desc: 'Make .psd maketdawdwadsadawdasdawdasdawdwasdwqad',
 			deadline: new Date(),
 			prior: 10,
 			time: '4 hours',
@@ -26,8 +26,8 @@ const TaskList = () => {
 		},
 	];
 	return (
-		<ul className="list">
-			<li className="list-title">
+		<ul className='list'>
+			<li className='list-title'>
 				<h3>Name</h3>
 				<h3>Description</h3>
 				<h3>Deadline</h3>
@@ -36,16 +36,16 @@ const TaskList = () => {
 				<h3>State</h3>
 				<h3>Done</h3>
 			</li>
-			{tasks.map((el, id) => (
-				<li key={id}>
-					<p>{el.name}</p>
-					<p>{el.desc}</p>
-					<p>{el.deadline.toDateString()}</p>
-					<p>{el.prior}/10</p>
-					<p>{el.time}</p>
-					<p>{el.state}</p>
+			{tasks.map(({ name, desc, deadline, prior, time, state }, index) => (
+				<li key={index}>
+					<p>{name}</p>
+					<p>{desc.length > 20 ? desc.substr(0, 20) + '...' : desc}</p>
+					<p>{deadline.toLocaleString()}</p>
+					<p>{prior}/10</p>
+					<p>{time}</p>
+					<p>{state}</p>
 					<p>
-						<input type="checkbox" />
+						<input type='checkbox' />
 					</p>
 				</li>
 			))}
