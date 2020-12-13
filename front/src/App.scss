@@ -1,123 +1,123 @@
 .Footer {
-  display: flex;
-  justify-content: flex-end;
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 30px;
-  background-color: rgb(166, 204, 255);
+	display: flex;
+	justify-content: flex-end;
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	padding: 30px;
+	background-color: rgb(166, 204, 255);
 }
 
 .Container {
-  text-align: center;
-  justify-content: center;
-  margin: 20px 10%;
-  background-color: #fff;
-  padding: 20px;
-  box-shadow: 0 0 5px #2c2e36;
+	text-align: center;
+	justify-content: center;
+	margin: 20px 10%;
+	background-color: #fff;
+	padding: 20px;
+	box-shadow: 0 0 5px #2c2e36;
 }
 
 .NavBar {
-  background-color: #fff;
-  width: 85%;
-  margin: auto;
-  display: flex;
-  justify-content: space-between;
-  box-shadow: 0 0 5px #2c2e36;
-  .logo {
-    flex: 5 1;
-    font-size: 24px;
-    justify-items: start;
-    padding: 10px 20px;
-    text-align: left;
-    color: #2c2e36;;
-  }
-  .links {
-    display: flex;
-    padding: 15px;
-    .link {
-      padding: 0 10px;
-      font-size: medium;
-      color: #2c2e36;;
-      &:hover {
-        color: #c50e0e;
-      }
-    }
-  }
-  .active {
-    color: #c50e0e !important;
-  }
+	background-color: #fff;
+	width: 85%;
+	margin: auto;
+	display: flex;
+	justify-content: space-between;
+	box-shadow: 0 0 5px #2c2e36;
+	flex: 5 1;
+	.logo {
+		font-size: 24px;
+		margin: 10px 0px 0px 20px;
+		color: #2c2e36;
+	}
+	.links {
+		display: flex;
+		padding: 15px;
+		.link {
+			padding: 0 10px;
+			font-size: medium;
+			color: #2c2e36;
+			&:hover {
+				color: #c50e0e;
+			}
+		}
+	}
+	.active {
+		color: #c50e0e !important;
+	}
 }
 
 .Form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  input {
-    padding: 5px 0;
-    font-size: medium;
-  }
-  input, button {
-    width: 20%;
-    margin: 10px 0px;
-    font-size: medium;
-    outline: none;
-  }
-  button {
-    padding: 10px;
-    margin-top: 10px;
-    border: none;
-    color: #000;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    background-color: #e7e7e7;
-  }
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	input {
+		padding: 5px 0;
+		font-size: medium;
+	}
+	input,
+	button {
+		padding: 10px;
+		width: 20%;
+		margin: 10px 0px;
+		font-size: medium;
+		outline: none;
+	}
+	button {
+		padding: 10px;
+		margin-top: 10px;
+		border: none;
+		color: #000;
+		text-align: center;
+		text-decoration: none;
+		display: inline-block;
+		background-color: #e7e7e7;
+	}
 }
 
 .Label {
-  padding: 8px;
+	padding: 8px;
 }
 
 .SelectAction {
-  margin: 10px;
+	margin: 10px;
 }
 
 .list {
-  list-style-type: none;
-  margin: auto;
-  li {
-    margin-top: 3px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    box-shadow: 0 0 3px #2c2e36;
-    p,
-    h3 {
-      flex: 1;
-      padding: 0 10px;
-    }
-  }
+	list-style-type: none;
+	margin: auto;
+	li {
+		margin-top: 3px;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		box-shadow: 0 0 3px #2c2e36;
+		p,
+		h3 {
+			flex: 1;
+			padding: 0 10px;
+		}
+	}
 }
 
 .user-details {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  margin: auto;
-  img {
-    width: 90px;
-    margin: 10px;
-  }
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	margin: auto;
+	img {
+		width: 90px;
+		margin: 10px;
+	}
 }
 
 .settings-list {
-  list-style-type: none;
-  li {
-    background-color: #ddd;
-    width: 20%;
-    margin: 10px auto;
-    padding: 10px;
-  }
+	list-style-type: none;
+	li {
+		background-color: #ddd;
+		width: 20%;
+		margin: 10px auto;
+		padding: 10px;
+	}
 }
