@@ -4,26 +4,23 @@ const TaskMock = require('../logic/taskHandler');
 const addTaskRouter = express.Router();
 addTaskRouter.use(bodyParser);
 
+function convertMinToHour(num) {
+	const hours = Math.floor(num / 60);
+	const minutes = num % 60;
+	return hours + ':' + minutes + ':00';
+}
+
 addTaskRouter.post('/', (req, res, error) => {
-	const {
+	const { name, description, date, ttd, priority, difficulty } = req.body;
+	const task = new TaskMock(
+		req.cookies['uid'],
 		name,
 		description,
-		deadline,
-		initialTime,
+		date.split('T').join(' ') + ':00.000+02',
+		convertMinToHour(ttd),
 		priority,
-		difficulty,
-		state,
-	} = req.body;
-	const task = new TaskMock({
-		uid: req.cookies['uid'],
-		name: name,
-		description: description,
-		deadline: deadline,
-		initialTime: initialTime,
-		priority: priority,
-		difficulty: difficulty,
-		state: state,
-	})
+		difficulty
+	)
 		.then(() => {
 			task.countBestStartTime();
 			res.setHeader('Content-Type', 'application/json');

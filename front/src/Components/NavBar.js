@@ -1,5 +1,4 @@
 import { NavLink } from 'react-router-dom';
-import { Fragment } from 'react';
 import { useAuth } from '../context/auth';
 
 const NavBar = () => {
@@ -14,7 +13,7 @@ const NavBar = () => {
 
 			<div className='links'>
 				{authToken ? (
-					<Fragment>
+					<>
 						<NavLink className='link' activeClassName='active' to='/task-list'>
 							Task List
 						</NavLink>
@@ -24,7 +23,7 @@ const NavBar = () => {
 						<NavLink className='link' activeClassName='active' to='/user-panel'>
 							Account
 						</NavLink>
-					</Fragment>
+					</>
 				) : (
 					<NavLink className='link' activeClassName='active' to='/sign' exact>
 						Auth

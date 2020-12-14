@@ -1,4 +1,3 @@
-import { Fragment } from 'react';
 import { useAuth } from '../context/auth';
 import { useHistory } from 'react-router-dom';
 
@@ -10,7 +9,7 @@ const UserPanel = () => {
 		history.push('/');
 	};
 	return (
-		<Fragment>
+		<>
 			Account details
 			<div className='user-details'>
 				<div>
@@ -30,7 +29,7 @@ const UserPanel = () => {
 				<li>settings</li>
 				<li onClick={logOut}>Log Out</li>
 			</ul>
-		</Fragment>
+		</>
 	);
 };
 
