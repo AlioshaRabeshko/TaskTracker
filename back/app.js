@@ -10,6 +10,7 @@ const session = require('express-session');
 const signRouter = require('./routes/sign');
 const addTaskRouter = require('./routes/add-task');
 const taskListRouter = require('./routes/task-list');
+const taskButtonRouter = require('./routes/taskButton');
 
 const app = express();
 const PORT = process.env.PORT || 3006;
@@ -55,7 +56,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/add-task', addTaskRouter);
 app.use('/task-list', taskListRouter);
-
+app.use('/task-button', taskButtonRouter);
 app.use(function (req, res, next) {
   next(createError(404));
 });
