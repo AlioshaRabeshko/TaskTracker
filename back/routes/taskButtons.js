@@ -41,3 +41,5 @@ taskButtonRouter.get('/pauseTask', (req, res, next) => {
     next(err);
   }
 });
+
+module.exports = taskButtonRouter;
