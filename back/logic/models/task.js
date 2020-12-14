@@ -46,10 +46,13 @@ Task.init(
 		priority: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
+			validate: {min:1, max:10},
+			
 		},
 		difficulty: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
+			validate: {min:1, max:10},
 		},
 		state: {
 			type: DataTypes.STRING,

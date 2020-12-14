@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser').json();
-const TaskMock = require('../logic/taskHandler');
+const { TaskMock } = require('../logic/taskHandler');
 const addTaskRouter = express.Router();
 addTaskRouter.use(bodyParser);
 
@@ -16,15 +16,18 @@ addTaskRouter.post('/', (req, res, error) => {
 		req.cookies['uid'],
 		name,
 		description,
+		//  Date.parse('2020-12-14 22:39:20.059+02'),
 		date.split('T').join(' ') + ':00.000+02',
-		convertMinToHour(ttd),
 		priority,
-		difficulty
-	)
+		difficulty,
+		convertMinToHour(ttd)
+	);
+	console.dir(task);
+	task
+		.countBestStartTime()
 		.then(() => {
-			task.countBestStartTime();
 			res.setHeader('Content-Type', 'application/json');
-			res.json({ status: 'Registration Successful!', task: task });
+			res.json({ status: 'Task added!', task: task });
 		})
 		.catch((err) => {
 			error(err);
