@@ -2,57 +2,131 @@ const {Sequelize, Model, DataTypes} = require('sequelize');
 const Task = require('./models/task');
 const TF = require('./timeFormatting').TimeFormatter;
 
-async function getCollidingNum(uid, deadline, whole_time) {
-  // change to async
-  const tasks = await Task.findAll({
+async function getCollidingNum(uid, deadline, initial_bst) {
+  const tasks1 = await Task.findAll({
     where: {
       state: 'pending',
       uid: uid,
-      best_start_time: {
-        [Sequelize.Op.gte]: deadline - whole_time,
-        [Sequelize.Op.lte]: deadline,
-      },
-      deadline: {
-        [Sequelize.Op.lte]: deadline,
-        [Sequelize.Op.gte]: deadline - whole_time,
-      },
+      [Sequelize.Op.or]: [
+        //1st
+        {
+          best_start_time: {
+            [Sequelize.Op.lte]: initial_bst,
+          },
+
+          deadline: {
+            [Sequelize.Op.lte]: deadline,
+            [Sequelize.Op.gte]: initial_bst,
+          },
+        },
+        //2nd
+        {
+          best_start_time: {
+            [Sequelize.Op.gte]: initial_bst,
+            [Sequelize.Op.lte]: deadline,
+          },
+
+          deadline: {
+            [Sequelize.Op.gte]: deadline,
+          },
+        },
+        //3rd
+        {
+          best_start_time: {
+            [Sequelize.Op.gte]: initial_bst,
+            [Sequelize.Op.lte]: deadline,
+          },
+
+          deadline: {
+            [Sequelize.Op.lte]: deadline,
+            [Sequelize.Op.gte]: initial_bst,
+          },
+        },
+        //4th
+        {
+          best_start_time: {
+            [Sequelize.Op.lte]: initial_bst,
+          },
+
+          deadline: {
+            [Sequelize.Op.gte]: deadline,
+          },
+        },
+      ],
     },
   });
 
-  return tasks.length;
+  return tasks1.length;
 }
 
-async function getCollidingNum(uid, deadline, whole_time, task_id) {
+async function getCollidingNumEx(uid, deadline, initial_bst, task_id) {
   // change to async
-  const tasks = await Task.findAll({
+  const tasks1 = await Task.findAll({
     where: {
       state: 'pending',
       uid: uid,
-      best_start_time: {
-        [Sequelize.Op.gte]: deadline - whole_time,
-        [Sequelize.Op.lte]: deadline,
-      },
-      deadline: {
-        [Sequelize.Op.lte]: deadline,
-        [Sequelize.Op.gte]: deadline - whole_time,
-      },
+      [Sequelize.Op.or]: [
+        //1st
+        {
+          best_start_time: {
+            [Sequelize.Op.lte]: initial_bst,
+          },
+
+          deadline: {
+            [Sequelize.Op.lte]: deadline,
+            [Sequelize.Op.gte]: initial_bst,
+          },
+        },
+        //2nd
+        {
+          best_start_time: {
+            [Sequelize.Op.gte]: initial_bst,
+            [Sequelize.Op.lte]: deadline,
+          },
+
+          deadline: {
+            [Sequelize.Op.gte]: deadline,
+          },
+        },
+        //3rd
+        {
+          best_start_time: {
+            [Sequelize.Op.gte]: initial_bst,
+            [Sequelize.Op.lte]: deadline,
+          },
+
+          deadline: {
+            [Sequelize.Op.lte]: deadline,
+            [Sequelize.Op.gte]: initial_bst,
+          },
+        },
+        //4th
+        {
+          best_start_time: {
+            [Sequelize.Op.lte]: initial_bst,
+          },
+
+          deadline: {
+            [Sequelize.Op.gte]: deadline,
+          },
+        },
+      ],
+
       id: {
         [Sequelize.Op.ne]: task_id,
       },
     },
   });
 
-  return tasks.length;
+  return tasks1.length;
 }
 
 async function getAllTasks(uid, deadline) {
-  // change to async method
-
   const tasks1 = await Task.findAll({
     where: {
       state: 'pending',
       uid: uid,
-      deadline: {[Sequelize.Op.lte]: deadline},
+      deadline: { [Sequelize.Op.lte]: deadline },
     },
     order: [['deadline', 'ASC']],
   });
@@ -61,20 +135,20 @@ async function getAllTasks(uid, deadline) {
     where: {
       state: 'pending',
       uid: uid,
-      deadline: {[Sequelize.Op.gt]: deadline},
+      deadline: { [Sequelize.Op.gt]: deadline },
     },
     order: [['deadline', 'ASC']],
   });
   return [tasks1, tasks2];
 }
 
-async function getAllTasks(uid, deadline, task_id) {
+async function getAllTasksEx(uid, deadline, task_id = null) {
   const tasks1 = await Task.findAll({
     where: {
       state: 'pending',
       uid: uid,
-      deadline: {[Sequelize.Op.lte]: deadline},
-      id: {[Sequelize.Op.ne]: task_id},
+      deadline: { [Sequelize.Op.lte]: deadline },
+      id: { [Sequelize.Op.ne]: task_id },
     },
     order: [['deadline', 'ASC']],
   });
@@ -83,14 +157,14 @@ async function getAllTasks(uid, deadline, task_id) {
     where: {
       state: 'pending',
       uid: uid,
-      deadline: {[Sequelize.Op.gt]: deadline},
-      id: {[Sequelize.Op.ne]: task_id},
+      deadline: { [Sequelize.Op.gt]: deadline },
+      id: { [Sequelize.Op.ne]: task_id },
     },
     order: [['deadline', 'ASC']],
   });
   return [tasks1, tasks2];
 }
-
+// exported function (to find it faster)
 module.exports.check_time = async function check_time(
   uid,
   deadline,
@@ -102,25 +176,34 @@ module.exports.check_time = async function check_time(
 ) {
   let whole_time =
     TF.toNormalTime(initial_time) + TF.toNormalTime(additional_time);
+
   if (execution_time != '00:00:00') {
     // had to put it in here due to update possibility
     whole_time -= TF.toNormalTime(execution_time);
   }
   let collNum;
+  const initial_bst_colliding = getTimeNoCollisions(deadline, whole_time);
   if (task_id === null) {
-    collNum = await getCollidingNum(uid, deadline, whole_time);
+    collNum = await getCollidingNum(uid, deadline, initial_bst_colliding);
   } else {
-    collNum = await getCollidingNum(uid, deadline, whole_time, task_id);
+    collNum = await getCollidingNumEx(
+      uid,
+      deadline,
+      initial_bst_colliding,
+      task_id
+    );
   }
+
   if (collNum === 0) {
-    return deadline - whole_time;
+    let time = getTimeNoCollisions(deadline, whole_time);
+    return time;
   } else {
     if (task_id === null) {
       [tasks_left, tasks_right] = await getAllTasks(uid, deadline);
     } else {
-      [tasks_left, tasks_right] = await getAllTasks(uid, deadline, task_id);
+      [tasks_left, tasks_right] = await getAllTasksEx(uid, deadline, task_id);
     }
-    let available_time = deadline - Date.now(); //divide by number of working hours
+    let available_time = getAvailableTime(deadline);
     let left_time = 0;
     for (task of tasks_left) {
       left_time +=
@@ -131,33 +214,35 @@ module.exports.check_time = async function check_time(
 
     let real_deadline = 0;
     if (tasks_right.length != 0) {
-      real_deadline = deadline - tasks_right[0].best_start_time;
+      real_deadline = subtractNonWorking(
+        deadline - tasks_right[0].best_start_time
+      ); // subtract non-working hours
     }
     if (real_deadline < 0) {
       real_deadline = 0;
     }
     if (available_time - left_time > whole_time + real_deadline) {
-      /* let lastLeftDeadline, left_arr;
-      [lastLeftDeadline, left_arr] = reduceShiftScopeLeft(
-        tasks_left,
-        whole_time,
-        available_time
-      );
-      console.dir(lastLeftDeadline);*/
-      return leftShift(tasks_left, null /*left_arr, lastLeftDeadline*/);
+      if (tasks_left.length === 0) {
+        return normalWorkHoursRight(tasks_right, deadline, whole_time);
+      } else {
+        return normalWorkHoursLeft(tasks_left, whole_time);
+      }
     } else if (
       0 < available_time - left_time &&
       available_time - left_time < whole_time + real_deadline
     ) {
       let overdue_time, left_arr;
-      [overdue_time, left_arr] = findLowPriorityLeft(
-        tasks_left,
-        whole_time,
-        available_time,
-        priority
-      );
+      let bst_left, bst_right;
+      if (tasks_left.length != 0) {
+        [overdue_time, left_arr] = findLowPriorityLeft(
+          tasks_left,
+          whole_time,
+          available_time,
+          priority
+        );
 
-      let bst_current = leftShift(left_arr, null);
+        bst_left = normalWorkHoursLeft(left_arr, whole_time);
+      }
       if (overdue_time > 0 && real_deadline > 0) {
         //check for ability of right shift
         let changed = 0;
@@ -176,79 +261,24 @@ module.exports.check_time = async function check_time(
             {
               where: {
                 uid: right_arr[0].uid,
+                id: right_arr[0].id,
               },
             }
           ).catch((err) => console.error(err));
         } else if (changed > 1) {
-          overdue_time = rightShift(
-            right_arr,
-            overdue_time,
-            changed,
-            priority,
-            deadline,
-            real_deadline
-          );
+          bst_right = normalWorkHoursRight(right_arr, deadline, whole_time);
         }
       }
       //print delay message
-      console.dir('expected overdue: ' + overdue_time);
+      console.dir('expected overdue: ' + bst_right - bst_left);
       return bst_current; // change to normal work hours
     } else {
       // add as is, print error message
-      console.dir('not enough time');
-      return deadline - whole_time; // change to normal work hours
+      console.dir('not enough time for bst');
+      return getTimeNoCollisions(bst_left, whole_time); // change to normal work hours
     }
   }
 };
-
-function leftShift(left_arr, lastLeftDeadline) {
-  // null if we shift all
-  for (task of left_arr) {
-    if (lastLeftDeadline === null) {
-      task.best_start_time = Date.now();
-    } else if (task.best_start_time > lastLeftDeadline) {
-      task.best_start_time = lastLeftDeadline;
-    }
-
-    lastLeftDeadline =
-      Date.parse(task.best_start_time) +
-      TF.toNormalTime(task.initial_time) +
-      TF.toNormalTime(task.additional_time) -
-      TF.toNormalTime(task.execution_time); // change to normal work hours
-    //push changes, mb add method to
-    Task.update(
-      {
-        best_start_time: task.best_start_time,
-        additional_time: task.additional_time,
-      },
-      {
-        where: {
-          uid: task.uid,
-        },
-      }
-    ).catch((err) => console.error(err));
-  }
-  return lastLeftDeadline;
-}
-
-function reduceShiftScopeLeft(left_arr, whole_time, available_time) {
-  available_time += Date.now();
-  lastLeftDeadline = null;
-  for (task of left_arr) {
-    lastLeftDeadline =
-      task.best_start_time +
-      TF.toNormalTime(task.initial_time) +
-      TF.toNormalTime(task.additional_time) -
-      TF.toNormalTime(task.execution_time);
-    available_time -= lastLeftDeadline; // change to normal work hours
-    if (whole_time >= available_time) {
-      left_arr.shift();
-    } else {
-      return [lastLeftDeadline, left_arr];
-    }
-  }
-  return [lastLeftDeadline, left_arr];
-}
 
 function findLowPriorityLeft(
   left_arr,
@@ -327,9 +357,9 @@ function checkForRightShift(
         ),
         0
       );
-      return {overdue_time, right_arr, changed: 1};
+      return { overdue_time, right_arr, changed: 1 };
     } else {
-      return {overdue_time, right_arr, changed: 0};
+      return { overdue_time, right_arr, changed: 0 };
     }
   }
 }
@@ -381,6 +411,7 @@ function rightShift(
       {
         where: {
           uid: right_arr[i].uid,
+          id: right_arr[i].id,
         },
       }
     ).catch((err) => console.error(err));
@@ -394,4 +425,220 @@ function rightShift(
     0
   );
   return overdue_time;
+}
+
+function normalWorkHoursLeft(
+  left_arr,
+  whole_time_current,
+  work_hours_left = '09:00:00',
+  work_hours_right = '18:00:00'
+) {
+  const work_hours_left_int = TF.toNormalTime(work_hours_left);
+  const work_hours_right_int = TF.toNormalTime(work_hours_right);
+  const work_hours =
+    TF.toNormalTime('24:00:00') - (work_hours_right_int - work_hours_left_int);
+  let lastLeftDeadline = Date.now(); // we should check if it cn be shrunken afterwards
+  for (task of left_arr) {
+    let task_hours =
+      TF.toNormalTime(task.initial_time) +
+      TF.toNormalTime(task.additional_time) -
+      TF.toNormalTime(task.execution_time);
+    //add bst here(should shift it once at start)
+    const date_initial_int = TF.toNormalTime(
+      new Date(lastLeftDeadline).toLocaleString().split(', ')[1]
+    );
+    if (
+      date_initial_int >= work_hours_left_int &&
+      date_initial_int <= work_hours_right_int
+    ) {
+    } else if (date_initial_int >= work_hours_right_int) {
+      lastLeftDeadline +=
+        work_hours - (date_initial_int - work_hours_right_int);
+    } else {
+      lastLeftDeadline += work_hours_left_int - date_initial_int;
+    }
+    task.best_start_time = lastLeftDeadline;
+
+    while (task_hours > 0) {
+      const date_int = TF.toNormalTime(
+        new Date(lastLeftDeadline).toLocaleString().split(', ')[1]
+      );
+
+      if (date_int >= work_hours_left_int && date_int <= work_hours_right_int) {
+        const subtract = Math.min(task_hours, work_hours_right_int - date_int);
+        task_hours -= subtract;
+        lastLeftDeadline += subtract;
+      } else if (date_int >= work_hours_right_int) {
+        lastLeftDeadline += work_hours - (date_int - work_hours_right_int);
+      } else {
+        lastLeftDeadline += work_hours_left_int - date_int;
+      }
+    }
+
+    Task.update(
+      {
+        best_start_time: task.best_start_time,
+        additional_time: task.additional_time,
+      },
+      {
+        where: {
+          uid: task.uid,
+          id: task.id,
+        },
+      }
+    ).catch((err) => console.error(err));
+  }
+
+  return lastLeftDeadline;
+}
+
+function normalWorkHoursRight(
+  right_arr,
+  deadline,
+  whole_time_current,
+  work_hours_left = '09:00:00',
+  work_hours_right = '18:00:00'
+) {
+  const work_hours_left_int = TF.toNormalTime(work_hours_left);
+  const work_hours_right_int = TF.toNormalTime(work_hours_right);
+  const work_hours =
+    TF.toNormalTime('24:00:00') - (work_hours_right_int - work_hours_left_int);
+  let lastRightBST;
+
+  right_arr.reverse();
+  if (right_arr.length != 0) {
+    lastRightBST = Date.parse(right_arr[right_arr.length - 1].deadline);
+  } else {
+    lastRightBST = deadline;
+  }
+  for (task of right_arr) {
+    let task_hours =
+      TF.toNormalTime(task.initial_time) +
+      TF.toNormalTime(task.additional_time) -
+      TF.toNormalTime(task.execution_time);
+
+    while (task_hours > 0) {
+      // do the same for the current
+      const date_int = TF.toNormalTime(
+        new Date(lastRightBST).toLocaleString().split(', ')[1]
+      );
+      if (date_int >= work_hours_left_int && date_int <= work_hours_right_int) {
+        const subtract = Math.min(task_hours, date_int - work_hours_left_int);
+        task_hours -= subtract;
+
+        lastRightBST -= subtract;
+      } else if (date_int <= work_hours_left_int) {
+        lastRightBST -= work_hours + (date_int - work_hours_left_int);
+      } else {
+        lastRightBST += work_hours_right_int - date_int;
+      }
+    }
+    task.best_start_time = lastRightBST; // new deadline for the element
+    Task.update(
+      {
+        best_start_time: task.best_start_time,
+        additional_time: task.additional_time,
+      },
+      {
+        where: {
+          uid: task.uid,
+          id: task.id,
+        },
+      }
+    ).catch((err) => console.error(err));
+  }
+
+  while (whole_time_current > 0) {
+    // do the same for the current
+    const date_int = TF.toNormalTime(
+      new Date(lastRightBST).toLocaleString().split(', ')[1]
+    );
+    if (date_int >= work_hours_left_int && date_int <= work_hours_right_int) {
+      const subtract = Math.min(
+        whole_time_current,
+        date_int - work_hours_left_int
+      );
+      whole_time_current -= subtract;
+
+      lastRightBST -= subtract;
+    } else if (date_int <= work_hours_left_int) {
+      lastRightBST -= work_hours + (date_int - work_hours_left_int);
+    } else {
+      lastRightBST += work_hours_right_int - date_int;
+    }
+  }
+
+  return lastRightBST;
+}
+
+function getAvailableTime(
+  deadline,
+  work_hours_left = '09:00:00',
+  work_hours_right = '18:00:00'
+) {
+  const work_hours_left_int = TF.toNormalTime(work_hours_left);
+  const work_hours_right_int = TF.toNormalTime(work_hours_right);
+  const date_initial_int = TF.toNormalTime(
+    new Date(Date.now()).toLocaleString().split(', ')[1]
+  );
+  if (
+    date_initial_int >= work_hours_left_int &&
+    date_initial_int <= work_hours_right_int
+  ) {
+    return (
+      work_hours_right_int -
+      date_initial_int +
+      (((deadline - date_initial_int) % (24 * 3600000)) - 1) *
+        (work_hours_right_int - work_hours_left_int)
+    );
+  } else if (date_initial_int >= work_hours_right_int) {
+    return (
+      (((deadline - date_initial_int) % (24 * 3600000)) - 1) *
+      (work_hours_right_int - work_hours_left_int)
+    );
+  } else {
+    return (
+      ((deadline - date_initial_int) % (24 * 3600000)) *
+      (work_hours_right_int - work_hours_left_int)
+    );
+  }
+}
+
+function getTimeNoCollisions(
+  deadline,
+  task_hours,
+  work_hours_left = '09:00:00',
+  work_hours_right = '18:00:00'
+) {
+  const work_hours_left_int = TF.toNormalTime(work_hours_left);
+  const work_hours_right_int = TF.toNormalTime(work_hours_right);
+  const work_hours =
+    TF.toNormalTime('24:00:00') - (work_hours_right_int - work_hours_left_int);
+  let lastRightBST = deadline;
+  while (task_hours > 0) {
+    const date_int = TF.toNormalTime(
+      new Date(lastRightBST).toLocaleString().split(', ')[1]
+    );
+    if (date_int >= work_hours_left_int && date_int <= work_hours_right_int) {
+      const subtract = Math.min(task_hours, date_int - work_hours_left_int);
+      task_hours -= subtract;
+      lastRightBST -= subtract;
+    } else if (date_int <= work_hours_left_int) {
+      lastRightBST -= work_hours + (date_int - work_hours_left_int);
+    } else {
+      lastRightBST += work_hours_right_int - date_int;
+    }
+  }
+  return lastRightBST;
+}
+
+function subtractNonWorking(
+  time,
+  work_hours_left = '09:00:00',
+  work_hours_right = '18:00:00'
+) {
+  const work_time =
+    TF.toNormalTime(work_hours_right) - TF.toNormalTime(work_hours_left);
+  const days = time % (24 * 60 * 60 * 1000);
+  return days * work_time + time - days * (24 * 60 * 60 * 1000); //will get rough assumption
 }
