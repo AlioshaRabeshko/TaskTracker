@@ -1,14 +1,17 @@
 const express = require('express');
 const bodyParser = require('body-parser').json();
 
-const {Task} = require('../logic/models/task');
+const Task = require('../logic/models/task');
 
 const taskListRouter = express.Router();
 taskListRouter.use(bodyParser);
 
 taskListRouter.get('/', (req, res) => {
   Task.findAll({
-    order: [['deadline', 'INC']],
+    where: {
+      uid: req.cookies['uid'],
+    },
+    order: [['deadline', 'ASC']],
   })
     .then((tasks) => {
       res.send(tasks).status(200);

@@ -10,14 +10,14 @@ let uid = null;
 let tsk = null;
 
 async function testAsync() {
-  await conn.sync({ force: true }).catch((err) => console.error(err));
+  await conn.sync({force: true}).catch((err) => console.error(err));
 
   await User.create({
     name: name,
     pass: pass,
     email: email,
   });
-  await User.findOne({ where: { name: name, pass: pass, email: email } }).then(
+  await User.findOne({where: {name: name, pass: pass, email: email}}).then(
     (user) => (uid = user.id)
   );
   await CH.initializeCoefficientEntries(uid);
