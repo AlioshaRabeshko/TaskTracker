@@ -13,9 +13,13 @@ const SubmitSchema = Yup.object().shape({
 
 const TaskEdit = () => {
 	const addTask = (values) => {
-		axios.post('/add-task', values).then(() => {
-			console.log('here');
-		});
+		console.log(values);
+		axios
+			.post('/add-task', values)
+			.then((res) => {
+				res.status === 200 ? console.log('success') : console.log('failure');
+			})
+			.catch((err) => console.log(err));
 	};
 
 	return (
@@ -31,8 +35,8 @@ const TaskEdit = () => {
 			}}
 			onSubmit={addTask}
 		>
-			{({ values, errors, touched, handleChange }) => (
-				<Form className='Form'>
+			{({ values, errors, touched, handleChange, handleSubmit }) => (
+				<Form className='Form' onSubmit={handleSubmit}>
 					<h3>Create a task:</h3>
 					<Field
 						type='text'
