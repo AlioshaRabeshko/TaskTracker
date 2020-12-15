@@ -11,12 +11,13 @@ function convertMinToHour(num) {
 }
 
 addTaskRouter.post('/', (req, res, error) => {
-  const {name, description, date, ttd, priority, difficulty} = req.body;
+  const {name, desc, date, ttd, priority, difficulty} = req.body;
   console.dir(req.body.date);
   const task = new TaskMock(
-    req.cookies['uid'],
+    // req.cookies['uid'],
+    15,
     name,
-    description,
+    desc,
     //Date.parse('2020-12-14 22:39:20.059+02'),
     Date.parse(date.split('T').join(' ') + ':00.000+02'),
     priority,
