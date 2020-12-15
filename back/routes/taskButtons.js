@@ -8,9 +8,11 @@ const taskHandler = require('../logic/taskHandler').TaskMock;
 const taskButtonRouter = express.Router();
 taskButtonRouter.use(bodyParser);
 
-taskButtonRouter.get('/startTask', (req, res, next) => {
-  const data = taskHandler.startTask(req.id);
-  res.cookie(req.id + '', data, {httpOnly: true});
+taskButtonRouter.post('/startTask', (req, res, next) => {
+  //console.log(req.body.id);
+
+  const data = taskHandler.startTask(req.body.id);
+  res.cookie(req.body.id + '', data, {httpOnly: true});
   res.statusCode = 200;
   res.setHeader('Content-Type', 'application/json');
 });

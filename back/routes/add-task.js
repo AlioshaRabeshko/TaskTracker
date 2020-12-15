@@ -14,8 +14,8 @@ addTaskRouter.post('/', (req, res, error) => {
   const {name, desc, date, ttd, priority, difficulty} = req.body;
   console.dir(req.body.date);
   const task = new TaskMock(
-    // req.cookies['uid'],
-    15,
+    req.cookies['uid'],
+    //15,
     name,
     desc,
     //Date.parse('2020-12-14 22:39:20.059+02'),

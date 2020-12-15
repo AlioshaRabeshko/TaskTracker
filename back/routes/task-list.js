@@ -9,7 +9,8 @@ taskListRouter.use(bodyParser);
 taskListRouter.get('/', (req, res) => {
   Task.findAll({
     where: {
-      uid: req.cookies['uid'],
+      //uid: req.cookies['uid'],
+      uid: 40,
     },
     order: [['deadline', 'ASC']],
   })
