@@ -512,6 +512,7 @@ function normalWorkHoursRight(
     lastRightBST = deadline;
   }
   for (task of right_arr) {
+    lastRightBST = Math.min(lastRightBST, task.deadline);
     let task_hours =
       TF.toNormalTime(task.initial_time) +
       TF.toNormalTime(task.additional_time) -
